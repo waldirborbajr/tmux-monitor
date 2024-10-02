@@ -9,12 +9,14 @@ import (
 	"time"
 
 	"golang.org/x/crypto/ssh"
+	"golang.org/x/crypto/ssh/knownhosts"
 )
 
 const (
-	redBold    = "\x1b[1;31m"
-	resetColor = "\x1b[0m"
-	configFile = "$HOME/.tmux-monitor"
+	redBold        = "\x1b[1;31m"
+	resetColor     = "\x1b[0m"
+	configFile     = "$HOME/.tmux-monitor"
+	knownHostsFile = "$HOME/.ssh/known_hosts"
 )
 
 type ServerConfig struct {
@@ -106,15 +108,31 @@ func getDockerStatus(config ServerConfig) string {
 }
 
 func sshConnect(config ServerConfig) (*ssh.Client, error) {
+	hostKeyCallback, err := getHostKeyCallback()
+	if err != nil {
+		return nil, fmt.Errorf("failed to get host key callback: %v", err)
+	}
+
 	sshConfig := &ssh.ClientConfig{
 		User: config.User,
 		Auth: []ssh.AuthMethod{
 			ssh.Password(config.Password),
 		},
-		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
+		HostKeyCallback: hostKeyCallback,
 	}
 
 	return ssh.Dial("tcp", fmt.Sprintf("%s:%d", config.Address, config.Port), sshConfig)
+}
+
+func getHostKeyCallback() (ssh.HostKeyCallback, error) {
+	knownHostsByte, err := os.ReadFile(os.ExpandEnv(knownHostsFile))
+	if err != nil {
+		return nil, fmt.Errorf("failed to read known_hosts file: %v", err)
+	}
+
+	knownHosts := knownhosts.New(string(knownHostsByte))
+
+	return knownHosts, nil
 }
 
 func runCommand(client *ssh.Client, cmd string) (string, error) {
