@@ -21,9 +21,9 @@ const (
 
 type ServerConfig struct {
 	Address        string
-	Port           int
 	User           string
 	Password       string
+	Port           int
 	UpdateInterval int
 }
 
@@ -131,8 +131,6 @@ func getHostKeyCallback() (ssh.HostKeyCallback, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed to read known_hosts file: %v", err)
 	}
-
-	fmt.Println("Known hosts file:", knownHosts)
 
 	return hostKeyCallback, nil
 }
