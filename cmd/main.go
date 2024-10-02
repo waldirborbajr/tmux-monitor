@@ -7,7 +7,6 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"time"
 
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/knownhosts"
@@ -22,11 +21,10 @@ const (
 )
 
 type ServerConfig struct {
-	Address        string
-	User           string
-	Password       string
-	Port           int
-	UpdateInterval int
+	Address  string
+	User     string
+	Password string
+	Port     int
 }
 
 func main() {
@@ -36,11 +34,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	for {
-		status := getDockerStatus(config)
-		fmt.Print(status)
-		time.Sleep(time.Duration(config.UpdateInterval) * time.Second)
-	}
+	status := getDockerStatus(config)
+	fmt.Println(status)
 }
 
 func readConfig(filename string) (ServerConfig, error) {
@@ -68,16 +63,11 @@ func readConfig(filename string) (ServerConfig, error) {
 			config.User = value
 		case "SERVER_PASSWORD":
 			config.Password = value
-		case "UPDATE_INTERVAL":
-			config.UpdateInterval, _ = strconv.Atoi(value)
 		}
 	}
 
 	if config.Address == "" || config.User == "" || config.Password == "" {
 		return ServerConfig{}, fmt.Errorf("missing required configuration")
-	}
-	if config.UpdateInterval == 0 {
-		config.UpdateInterval = 30 // Default to 30 seconds if not specified
 	}
 
 	return config, scanner.Err()
