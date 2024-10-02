@@ -18,3 +18,4 @@ $HOME/.tmux-monitor
 *.log
 
 build/**
+build
