@@ -125,14 +125,16 @@ func sshConnect(config ServerConfig) (*ssh.Client, error) {
 }
 
 func getHostKeyCallback() (ssh.HostKeyCallback, error) {
-	knownHostsByte, err := os.ReadFile(os.ExpandEnv(knownHostsFile))
+	knownHosts := os.ExpandEnv(knownHostsFile)
+
+	hostKeyCallback, err := knownhosts.New(knownHosts)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read known_hosts file: %v", err)
 	}
 
-	knownHosts := knownhosts.New(string(knownHostsByte))
+	fmt.Println("Known hosts file:", knownHosts)
 
-	return knownHosts, nil
+	return hostKeyCallback, nil
 }
 
 func runCommand(client *ssh.Client, cmd string) (string, error) {
