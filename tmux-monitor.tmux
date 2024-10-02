@@ -20,16 +20,22 @@ set_tmux_option() {
 }
 
 docker_monitor() {
-  "$CURRENT_DIR/scripts/tmux-monitor"
+  "$CURRENT_DIR/tmux-monitor"
 }
 
 main() {
   local status_right=$(get_tmux_option "status-right" "")
-  local new_status_right="#($CURRENT_DIR/scripts/tmux-monitor) $status_right"
+  local new_status_right="#($CURRENT_DIR/tmux-monitor) $status_right"
   set_tmux_option "status-right" "$new_status_right"
 
-  # The update interval is now handled within the Go script
-  tmux run-shell -b "$CURRENT_DIR/scripts/tmux-monitor"
+  # Set a shorter status-interval to update more frequently
+  set_tmux_option "status-interval" "30"
+
+  # Force refresh of tmux status bar
+  tmux refresh-client -S
+
+  # Start the monitor script in the background
+  tmux run-shell -b "$CURRENT_DIR/tmux-monitor"
 }
 
 main
