@@ -1,4 +1,10 @@
+<img src="https://github.com/user-attachments/assets/9fb07638-5907-4915-b9bf-1ca89255a93d" alt="drawing" style="width:100px;"/>
+
 # Tmux Docker Monitor
+
+<p align="center">
+  <img width="256" height="256" src="https://github.com/user-attachments/assets/e9454f13-025f-4a0b-9296-a1807c2cc6c3" />
+</p>
 
 A Tmux plugin to monitor Docker containers running on a remote server.
 
