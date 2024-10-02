@@ -19,3 +19,4 @@ $HOME/.tmux-monitor
 
 build/**
 build
+build/tmux-monitor
