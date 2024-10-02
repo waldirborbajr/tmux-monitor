@@ -18,6 +18,7 @@ const (
 	resetColor     = "\x1b[0m"
 	configFile     = "$HOME/.tmux-monitor"
 	knownHostsFile = "$HOME/.ssh/known_hosts"
+	version        = "v0.1.0"
 )
 
 type ServerConfig struct {
