@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"net"
 	"os"
 	"strconv"
 	"strings"
@@ -126,13 +127,29 @@ func sshConnect(config ServerConfig) (*ssh.Client, error) {
 
 func getHostKeyCallback() (ssh.HostKeyCallback, error) {
 	knownHosts := os.ExpandEnv(knownHostsFile)
-
-	hostKeyCallback, err := knownhosts.New(knownHosts)
+	callback, err := knownhosts.New(knownHosts)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read known_hosts file: %v", err)
+		return nil, err
 	}
-
-	return hostKeyCallback, nil
+	return ssh.HostKeyCallback(func(hostname string, remote net.Addr, key ssh.PublicKey) error {
+		err := callback(hostname, remote, key)
+		if err == nil {
+			return nil
+		}
+		if keyErr, ok := err.(*knownhosts.KeyError); ok {
+			if len(keyErr.Want) == 0 {
+				// Key not in known_hosts, add it
+				f, err := os.OpenFile(knownHosts, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0600)
+				if err != nil {
+					return err
+				}
+				defer f.Close()
+				_, err = f.WriteString(knownhosts.Line([]string{hostname}, key) + "\n")
+				return err
+			}
+		}
+		return err
+	}), nil
 }
 
 func runCommand(client *ssh.Client, cmd string) (string, error) {
