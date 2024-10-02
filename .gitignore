@@ -1,0 +1,18 @@
+# Ignore configuration file containing sensitive information
+$HOME/.tmux-monitor
+
+# Ignore Go build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Ignore Go test cache
+*.test
+
+# Ignore Go coverage output
+*.out
+
+# Ignore any log files
+*.log
