@@ -16,3 +16,5 @@ $HOME/.tmux-monitor
 
 # Ignore any log files
 *.log
+
+build/**
