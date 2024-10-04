@@ -10,6 +10,8 @@ import (
 
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/knownhosts"
+
+	"github.com/waldirborbajr/tmux-monitor/tmux"
 )
 
 const (
@@ -36,6 +38,11 @@ func main() {
 
 	status := getDockerStatus(config)
 	fmt.Println(status)
+	refreshTmux()
+}
+
+func refreshTmux() {
+	_ = tmux.RefreshClient("-S")
 }
 
 func readConfig(filename string) (ServerConfig, error) {
@@ -186,7 +193,7 @@ func parseResourceUsage(input string) map[string]string {
 }
 
 func formatOutput(stats map[string]int, usage map[string]string) string {
-	output := fmt.Sprintf("🐳 Up: %d, Down: %d, Stopped: %d, Failed: %d, Died: %d | ",
+	output := fmt.Sprintf("🐳 U: %d, D: %d, S: %d, F: %d, X: %d | ",
 		stats["running"], stats["exited"], stats["stopped"], stats["failed"], stats["dead"])
 
 	for container, resources := range usage {

@@ -6,6 +6,7 @@ GOCLEAN=$(GOCMD) clean
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
 TIDY=$(GOCMD) mod tidy
+UPDATE=$(GOCMD) get -u all 
 
 # Binary name
 BINARY_NAME=tmux-monitor
@@ -37,6 +38,9 @@ all: deps build
 deps:
 	$(TIDY)
 
+update:
+	$(UPDATE)
+
 build: deps
 	$(GOBUILD) -o $(BUILD_DIR)/$(BINARY_NAME) $(MAIN_PACKAGE_PATH)
 
@@ -51,6 +55,7 @@ install: build
 	mkdir -p $(INSTALL_DIR)
 	cp $(BUILD_DIR)/$(BINARY_NAME) $(INSTALL_DIR)/
 	cp tmux-monitor.tmux $(INSTALL_DIR)/
+	chmod u+x $(INSTALL_DIR)/tmux-monitor.tmux
 	@echo "Plugin installed to $(INSTALL_DIR)"
 
 release: deps
