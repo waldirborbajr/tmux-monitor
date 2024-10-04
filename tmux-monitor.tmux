@@ -19,13 +19,13 @@ set_tmux_option() {
   tmux set-option -gq "$option" "$value"
 }
 
-docker_monitor() {
-  "$CURRENT_DIR/tmux-monitor"
-}
+# docker_monitor() {
+#   "$CURRENT_DIR/tmux-monitor s"
+# }
 
 main() {
   local status_right=$(get_tmux_option "status-right" "")
-  local new_status_right="#($CURRENT_DIR/tmux-monitor) $status_right"
+  local new_status_right="#($CURRENT_DIR/tmux-monitor s) $status_right"
   set_tmux_option "status-right" "$new_status_right"
 
   # Set a shorter status-interval to update more frequently
@@ -35,7 +35,7 @@ main() {
   tmux refresh-client -S
 
   # Start the monitor script in the background
-  tmux run-shell -b "$CURRENT_DIR/tmux-monitor"
+  tmux run-shell -b "$CURRENT_DIR/tmux-monitor s"
 }
 
 main
