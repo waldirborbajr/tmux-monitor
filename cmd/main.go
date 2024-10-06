@@ -83,7 +83,7 @@ func print_short(*cli.Context) {
 }
 
 func refreshTmux() {
-	_ = tmux.RefreshClient("-S")
+	_, _ = tmux.RefreshClient("-S")
 }
 
 func readConfig(filename string) (ServerConfig, error) {
