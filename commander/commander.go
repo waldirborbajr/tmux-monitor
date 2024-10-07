@@ -48,13 +48,13 @@ func (c DefaultCommander) ExecSilently(cmd *exec.Cmd) error {
 		c.logger.Println(strings.Join(cmd.Args, " "))
 	}
 
-	err := cmd.Run()
-	if err != nil {
+	if err := cmd.Run(); err != nil {
 		if c.logger != nil {
 			c.logger.Println(err)
 		}
-		// return &ShellError{strings.Join(cmd.Args, " "), err}
-		return &ShellError{Command: strings.Join(cmd.Args, " "), err}
+		// return &ShellError{strings.Join(cmd.Args, " "), Err: err}
+		return fmt.Errorf("%s: %w", strings.Join(cmd.Args, " "), err)
+
 	}
 	return nil
 }
