@@ -1,26 +1,53 @@
+# run:
+#   timeout: 5m
+#   tests: false
+# issues:
+#   include:
+#     - EXC0001
+#     - EXC0005
+#     - EXC0011
+#     - EXC0012
+#     - EXC0013
+#   max-issues-per-linter: 0
+#   max-same-issues: 0
+# linters:
+#   enable:
+#     - bodyclose
+#     - goimports
+#     - gosec
+#     - nilerr
+#     - predeclared
+#     - revive
+#     - rowserrcheck
+#     - sqlclosecheck
+#     - tparallel
+#     - unconvert
+#     - unparam
+#     - whitespace
+
 run:
-  timeout: 5m
-  tests: false
-issues:
-  include:
-    - EXC0001
-    - EXC0005
-    - EXC0011
-    - EXC0012
-    - EXC0013
-  max-issues-per-linter: 0
-  max-same-issues: 0
+  skip-dirs:
+    - .tmp
+    - vendor
 linters:
+  disable-all: true
   enable:
-    - bodyclose
+    # - errcheck
+    - gocritic
+    - goconst
     - goimports
-    - gosec
-    - nilerr
-    - predeclared
-    - revive
-    - rowserrcheck
-    - sqlclosecheck
-    - tparallel
-    - unconvert
-    - unparam
-    - whitespace
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - stylecheck
+    - typecheck
+    - unused
+linters-settings:
+  govet:
+    # report about shadowed variables
+    check-shadowing: true
+issues:
+  exclude-rules:
+    - linters: [stylecheck]
+      text: "ST1005:"

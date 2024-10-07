@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/urfave/cli"
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/knownhosts"
 
@@ -19,8 +20,9 @@ const (
 	resetColor     = "\x1b[0m"
 	configFile     = "$HOME/.tmux-monitor"
 	knownHostsFile = "$HOME/.ssh/known_hosts"
-	version        = "v0.1.0"
 )
+
+var version = "[dev build]"
 
 type ServerConfig struct {
 	Address  string
@@ -30,6 +32,45 @@ type ServerConfig struct {
 }
 
 func main() {
+	app := cli.NewApp()
+
+	app.Version = version
+	app.Name = "tmux-monitor"
+	app.HelpName = "tmux-monitor"
+	app.Usage = "monitor Docker containers running on a remote server"
+	app.Description = strings.Join([]string{
+		"tmux-monitor connects to remote server and get containers status.",
+		"This allows to monitor healthcheck of docker containers.",
+	}, " ")
+	app.Author = "Waldir \"Borba\" Junior"
+	app.Email = "wborbajr@gmail.com"
+
+	app.Flags = []cli.Flag{
+		cli.BoolFlag{
+			Name:  "debug, d",
+			Usage: "enable debug logging",
+		},
+	}
+
+	app.Commands = []cli.Command{
+		{
+			Name:      "short",
+			ShortName: "s",
+			Usage:     "show short stats version",
+			Action:    print_short,
+		},
+		{
+			Name:      "full",
+			ShortName: "f",
+			Usage:     "show full stats version",
+			Action:    print_short,
+		},
+	}
+
+	app.Run(os.Args)
+}
+
+func print_short(*cli.Context) {
 	config, err := readConfig(configFile)
 	if err != nil {
 		fmt.Printf("%sError reading config: %v%s\n", redBold, err, resetColor)
@@ -42,7 +83,7 @@ func main() {
 }
 
 func refreshTmux() {
-	_ = tmux.RefreshClient("-S")
+	_, _ = tmux.RefreshClient("-S")
 }
 
 func readConfig(filename string) (ServerConfig, error) {
