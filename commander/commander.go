@@ -37,9 +37,7 @@ func (c DefaultCommander) Exec(cmd *exec.Cmd) (string, error) {
 		}
 		// return "", &ShellError{strings.Join(cmd.Args, " "), err}
 		return "", &ShellError{Command: strings.Join(cmd.Args, " "), Err: err}
-
 	}
-
 	return strings.TrimSuffix(string(output), "\n"), nil
 }
 
@@ -54,7 +52,6 @@ func (c DefaultCommander) ExecSilently(cmd *exec.Cmd) error {
 		}
 		// return &ShellError{strings.Join(cmd.Args, " "), Err: err}
 		return fmt.Errorf("%s: %w", strings.Join(cmd.Args, " "), err)
-
 	}
 	return nil
 }
