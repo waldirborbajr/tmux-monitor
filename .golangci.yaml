@@ -1,53 +1,39 @@
-# run:
-#   timeout: 5m
-#   tests: false
-# issues:
-#   include:
-#     - EXC0001
-#     - EXC0005
-#     - EXC0011
-#     - EXC0012
-#     - EXC0013
-#   max-issues-per-linter: 0
-#   max-same-issues: 0
-# linters:
-#   enable:
-#     - bodyclose
-#     - goimports
-#     - gosec
-#     - nilerr
-#     - predeclared
-#     - revive
-#     - rowserrcheck
-#     - sqlclosecheck
-#     - tparallel
-#     - unconvert
-#     - unparam
-#     - whitespace
-
 run:
-  skip-dirs:
-    - .tmp
-    - vendor
+  issues:
+    exclude-rules:
+      - linters: [stylecheck]
+        text: "ST1005:"
+    exclude-dirs:
+      - .tmp
+      - vendor
 linters:
   disable-all: true
   enable:
     # - errcheck
-    - gocritic
+    - asciicheck
+    - copyloopvar
     - goconst
+    - gocritic
+    - godot
+    - gofmt
+    - gofumpt
     - goimports
+    - gomodguard
+    - goprintffuncname
     - gosimple
     - govet
     - ineffassign
-    - staticcheck
+    - misspell
+    - nakedret
+    - nolintlint
+    - sqlclosecheck
     - stylecheck
     - typecheck
+    - unconvert
     - unused
+    - whitespace
 linters-settings:
-  govet:
-    # report about shadowed variables
-    check-shadowing: true
-issues:
-  exclude-rules:
-    - linters: [stylecheck]
-      text: "ST1005:"
+  gofumpt:
+    extra-rules: true
+  misspell:
+    locale: US  

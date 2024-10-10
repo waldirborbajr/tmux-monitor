@@ -16,7 +16,7 @@ endif
 # Go parameters
 GOCMD=go
 GOBUILD=$(GOCMD) build
-GOCLEAN=$(GOCMD) clean
+GOCLEAN=$(GOCMD) clean -cache
 GOTEST=$(GOCMD) test
 GOGET=$(GOCMD) get
 TIDY=$(GOCMD) mod tidy
@@ -54,6 +54,10 @@ version:
 
 deps:
 	$(TIDY)
+
+lint-go:
+	golangci-lint cache clean
+	golangci-lint run
 
 update:
 	$(UPDATE)
