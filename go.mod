@@ -1,6 +1,6 @@
 module github.com/waldirborbajr/tmux-monitor
 
-go 1.23.1
+go 1.22
 
 require (
 	github.com/urfave/cli v1.22.15
