@@ -11,8 +11,6 @@ import (
 	"github.com/urfave/cli"
 	"golang.org/x/crypto/ssh"
 	"golang.org/x/crypto/ssh/knownhosts"
-
-	"github.com/waldirborbajr/tmux-monitor/tmux"
 )
 
 const (
@@ -57,20 +55,20 @@ func main() {
 			Name:      "short",
 			ShortName: "s",
 			Usage:     "show short stats version",
-			Action:    print_short,
+			Action:    printShort,
 		},
 		{
 			Name:      "full",
 			ShortName: "f",
 			Usage:     "show full stats version",
-			Action:    print_short,
+			Action:    printShort,
 		},
 	}
 
 	app.Run(os.Args)
 }
 
-func print_short(*cli.Context) {
+func printShort(*cli.Context) {
 	config, err := readConfig(configFile)
 	if err != nil {
 		fmt.Printf("%sError reading config: %v%s\n", redBold, err, resetColor)
@@ -79,11 +77,6 @@ func print_short(*cli.Context) {
 
 	status := getDockerStatus(config)
 	fmt.Println(status)
-	refreshTmux()
-}
-
-func refreshTmux() {
-	_, _ = tmux.RefreshClient("-S")
 }
 
 func readConfig(filename string) (ServerConfig, error) {
