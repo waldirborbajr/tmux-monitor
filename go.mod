@@ -3,7 +3,7 @@ module github.com/waldirborbajr/tmux-monitor
 go 1.22
 
 require (
-	github.com/urfave/cli v1.22.15
+	github.com/urfave/cli v1.22.16
 	golang.org/x/crypto v0.28.0
 )
 
